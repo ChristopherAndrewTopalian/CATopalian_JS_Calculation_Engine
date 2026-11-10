@@ -1,5 +1,5 @@
 # CATopalian JS Calculation Engine
-A very easy calculation engine that utilizes indiviual files for easy design flexibility.
+A very easy calculation engine that utilizes individual files for easy design flexibility.
 
 ---
 
