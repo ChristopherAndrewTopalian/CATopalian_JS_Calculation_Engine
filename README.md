@@ -29,6 +29,8 @@ A very easy JavaScript calculation engine that utilizes individual files for eas
 
 ![013](src/media/textures/screenshots/013.webp)
 
+Video: https://www.youtube.com/watch?v=TlwQNu9oK8c
+
 ---
 
 ### How to Download this App
