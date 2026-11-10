@@ -1,0 +1,161 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- perimeter_of_rectangle.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Perimeter of a Rectangle </title>
+
+<meta charset='UTF-8'>
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateRectanglePerimeter(length, width)
+{
+    try
+    {
+        let perimeter = 2 * (parseFloat(length) + parseFloat(width));
+        return perimeter;
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Perimeter of Rectangle';
+    ba(theTitle);
+
+    // Create a Flexbox wrapper to hold the Calculator (Left) and SVG (Right) side-by-side
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ==
+    // LEFT SIDE: The Calculator
+    // ==
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'LENGTH';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        let result = calculateRectanglePerimeter(inputA.value, inputB.value);
+        ge('result').value = result;
+        
+        // Update the SVG Text dynamically
+        if (inputA.value === '')
+        {
+            ge('svgLengthText').textContent = 'Length';
+        }
+        else
+        {
+            ge('svgLengthText').textContent = inputA.value;
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let input_B_Label = ce('div');
+    input_B_Label.id = 'input_B_Label';
+    input_B_Label.textContent = 'WIDTH';
+    inputContainer.append(input_B_Label);
+
+    let inputB = ce('input');
+    inputB.id = 'inputB';
+    inputB.type = 'number';
+    inputB.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        let result = calculateRectanglePerimeter(inputA.value, inputB.value);
+        ge('result').value = result;
+        
+        // Update the SVG Text
+        if (inputB.value === '')
+        {
+            ge('svgWidthText').textContent = 'Width';
+        }
+        else
+        {
+            ge('svgWidthText').textContent = inputB.value;
+        }
+    };
+    inputContainer.append(inputB);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Perimeter';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ==
+    // RIGHT SIDE: The SVG Graphic
+    // ==
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <!-- The Rectangle Shape -->
+            <rect x="60" y="50" width="200" height="120" fill="rgba(0, 136, 255, 0.2)" stroke="#00ffcc" stroke-width="3" rx="4" />
+            
+            <!-- Length Label (Bottom Center) -->
+            <text id="svgLengthText" x="160" y="195" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">Length</text>
+            
+            <!-- Width Label (Left Center, Rotated 90 degrees) -->
+            <!-- transform="rotate(angle, x, y)" -->
+            <text id="svgWidthText" x="40" y="110" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" transform="rotate(-90, 40, 110)">Width</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+
+</head>
+
+<body onload = 'whenLoaded();'>
+
+</body>
+
+</html>

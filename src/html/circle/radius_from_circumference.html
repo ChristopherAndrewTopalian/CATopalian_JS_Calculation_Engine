@@ -1,0 +1,146 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- radius_from_circumference.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Radius from Circumference </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateRadiusFromCircumference(circumference)
+{
+    try
+    {
+        // Radius = C / (2 * pi)
+        let radius = parseFloat(circumference) / (2 * Math.PI);
+        
+        return radius.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Find Radius (from Circumference)';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    inputContainer.style.width = '180px';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'CIRCUMFERENCE';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateRadiusFromCircumference(inputA.value);
+        ge('result').value = result;
+        
+        // Update SVG Labels
+        if (inputA.value === '')
+        {
+            ge('svgCircumferenceText').textContent = 'Circumference';
+            ge('svgRadiusText').textContent = 'Radius';
+        }
+        else
+        {
+            ge('svgCircumferenceText').textContent = 'C = ' + inputA.value;
+            ge('svgRadiusText').textContent = result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Radius';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    // In this SVG, the text for Circumference follows a curved path along the top of the circle
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <defs>
+                <!-- An invisible curved path for the Circumference text to follow -->
+                <!-- A sweep-flag of 1 draws the curve over the top of the circle -->
+                <path id="circleCurve" d="M 50,125 A 100,100 0 0,1 250,125" fill="none" />
+            </defs>
+
+            <!-- The Circle Shape -->
+            <circle cx="150" cy="125" r="100" fill="rgba(0, 136, 255, 0.05)" stroke="#00ffcc" stroke-width="6" />
+            
+            <!-- Center Dot -->
+            <circle cx="150" cy="125" r="4" fill="#ffcc00" />
+            
+            <!-- Dashed Radius Line -->
+            <line x1="150" y1="125" x2="250" y2="125" stroke="#ffcc00" stroke-width="2" stroke-dasharray="5,5" />
+            
+            <!-- Radius Label (Outputs the Result) -->
+            <text id="svgRadiusText" x="200" y="115" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">Radius</text>
+
+            <!-- Circumference Label (Inputs the Value, curving along the top border) -->
+            <text fill="#00ffcc" font-size="20" font-weight="bold" font-family="Arial, sans-serif" dy="-10">
+                <textPath id="svgCircumferenceText" href="#circleCurve" startOffset="50%" text-anchor="middle">Circumference</textPath>
+            </text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>

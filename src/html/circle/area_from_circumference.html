@@ -1,0 +1,140 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- area_from_circumference.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Area from Circumference </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateAreaFromCircumference(circumference)
+{
+    try
+    {
+        // Area = (C^2) / (4 * pi)
+        let c = parseFloat(circumference);
+        let area = (c * c) / (4 * Math.PI);
+        
+        return area.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Area from Circumference';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    inputContainer.style.width = '180px';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'CIRCUMFERENCE';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateAreaFromCircumference(inputA.value);
+        ge('result').value = result;
+        
+        // Update both SVG labels dynamically
+        if (inputA.value === '')
+        {
+            ge('svgCircumferenceText').textContent = 'Circumference';
+            ge('svgAreaText').textContent = 'Area';
+        }
+        else
+        {
+            ge('svgCircumferenceText').textContent = 'C = ' + inputA.value;
+            ge('svgAreaText').textContent = 'Area = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Area';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <defs>
+                <!-- Invisible curved path for the Circumference text -->
+                <path id="circleCurve" d="M 50,125 A 100,100 0 0,1 250,125" fill="none" />
+            </defs>
+
+            <!-- The Circle Shape -->
+            <!-- Solid fill emphasizes that Area is the space INSIDE the shape -->
+            <circle cx="150" cy="125" r="100" fill="rgba(0, 136, 255, 0.2)" stroke="#00ffcc" stroke-width="3" />
+            
+            <!-- Area Label (Outputs the Result directly in the center) -->
+            <text id="svgAreaText" x="150" y="130" fill="#00ffcc" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">Area</text>
+
+            <!-- Circumference Label (Inputs the Value, curving along the top border) -->
+            <text fill="#ffcc00" font-size="20" font-weight="bold" font-family="Arial, sans-serif" dy="-10">
+                <textPath id="svgCircumferenceText" href="#circleCurve" startOffset="50%" text-anchor="middle">Circumference</textPath>
+            </text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>

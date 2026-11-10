@@ -1,0 +1,139 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- radius_from_diameter.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Radius from Diameter </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateRadiusFromDiameter(diameter)
+{
+    try
+    {
+        // Radius is simply half of the diameter
+        let radius = parseFloat(diameter) / 2;
+        
+        return radius;
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Radius from Diameter';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'DIAMETER';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateRadiusFromDiameter(inputA.value);
+        ge('result').value = result;
+        
+        // Update both SVG labels dynamically
+        if (inputA.value === '')
+        {
+            ge('svgDiameterText').textContent = 'Diameter';
+            ge('svgRadiusText').textContent = 'Radius';
+        }
+        else
+        {
+            ge('svgDiameterText').textContent = 'D = ' + inputA.value;
+            ge('svgRadiusText').textContent = 'R = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Radius';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <!-- The Circle Shape -->
+            <circle cx="150" cy="125" r="100" fill="rgba(0, 136, 255, 0.05)" stroke="#00ffcc" stroke-width="3" />
+            
+            <!-- Dashed Diameter Line (The Input, spanning the entire width) -->
+            <line x1="50" y1="125" x2="250" y2="125" stroke="#00ffcc" stroke-width="2" stroke-dasharray="5,5" />
+            
+            <!-- Diameter Label (Resting on the left half of the line) -->
+            <text id="svgDiameterText" x="100" y="115" fill="#00ffcc" font-size="16" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">Diameter</text>
+
+            <!-- Center Dot -->
+            <circle cx="150" cy="125" r="5" fill="#ffcc00" />
+            
+            <!-- Solid Radius Line (The Output, drawn perfectly over the right half of the diameter) -->
+            <line x1="150" y1="125" x2="250" y2="125" stroke="#ffcc00" stroke-width="5" />
+            
+            <!-- Radius Label (Resting on the right half of the line) -->
+            <text id="svgRadiusText" x="200" y="115" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">Radius</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- area_of_circle.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Area from Radius </title>
+
+<meta charset='UTF-8'>
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateCircleArea(radius)
+{
+    try
+    {
+        // Area = pi * r^2
+        let area = Math.PI * (parseFloat(radius) * parseFloat(radius));
+        return area.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Area of a Circle';
+    ba(theTitle);
+
+    // Create a Flexbox wrapper to hold the Calculator (Left) and SVG (Right) side-by-side
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'RADIUS';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateCircleArea(inputA.value);
+        ge('result').value = result;
+        
+        // Update the SVG Text dynamically using if/else
+        if (inputA.value === '')
+        {
+            ge('svgRadiusText').textContent = 'Radius';
+        }
+        else
+        {
+            ge('svgRadiusText').textContent = inputA.value;
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Area';
+    result_label.style.marginTop = '15px'; // Added a little top margin since there is only one input
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <!-- The Circle Shape -->
+            <!-- cx and cy are the center coordinates, r is the radius -->
+            <circle cx="150" cy="125" r="100" fill="rgba(0, 136, 255, 0.2)" stroke="#00ffcc" stroke-width="3" />
+            
+            <!-- Center Dot -->
+            <circle cx="150" cy="125" r="4" fill="#ffcc00" />
+            
+            <!-- Dashed Radius Line (from center to right edge) -->
+            <!-- x1/y1 is the start point (center), x2/y2 is the end point -->
+            <line x1="150" y1="125" x2="250" y2="125" stroke="#ffcc00" stroke-width="2" stroke-dasharray="5,5" />
+            
+            <!-- Radius Label (Hovering just above the dashed line) -->
+            <text id="svgRadiusText" x="200" y="115" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">Radius</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+
+</head>
+
+<body onload = 'whenLoaded();'>
+
+</body>
+
+</html>
+
