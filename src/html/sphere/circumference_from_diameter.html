@@ -1,0 +1,161 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- circumference_from_diameter.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Sphere: Circumference from Diameter </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateSphereCircumferenceFromDiameter(diameter)
+{
+    try
+    {
+        // Circumference = pi * diameter
+        // The exact same math as a 2D circle!
+        let circumference = Math.PI * parseFloat(diameter);
+        
+        return circumference.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Sphere: Circumference from Diameter';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'DIAMETER';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateSphereCircumferenceFromDiameter(inputA.value);
+        ge('result').value = result;
+        
+        // Update both SVG labels dynamically
+        if (inputA.value === '')
+        {
+            ge('svgDiameterText').textContent = 'Diameter';
+            ge('svgCircumferenceText').textContent = 'Circumference';
+        }
+        else
+        {
+            ge('svgDiameterText').textContent = 'D = ' + inputA.value;
+            ge('svgCircumferenceText').textContent = 'C = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Circumference';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <defs>
+                <!-- 3D Radial Gradient Lighting -->
+                <radialGradient id="sphereLight" cx="35%" cy="35%" r="65%">
+                    <stop offset="0%" stop-color="rgba(0, 255, 255, 0.7)" />
+                    <stop offset="100%" stop-color="rgba(0, 136, 255, 0.2)" />
+                </radialGradient>
+                
+                <!-- Invisible curved path for the Circumference (Front Equator) -->
+                <!-- We draw it explicitly here so textPath can follow it flawlessly -->
+                <path id="equatorCurve" d="M 50,125 A 100,30 0 0,0 250,125" fill="none" />
+            </defs>
+
+            <!-- The Sphere Base -->
+            <circle cx="150" cy="125" r="100" fill="url(#sphereLight)" stroke="#00ffcc" stroke-width="2" />
+            
+            <!-- BACK half of the equator (Dotted, fading behind the sphere) -->
+            <path d="M 50,125 A 100,30 0 0,1 250,125" fill="none" stroke="#ffcc00" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.4" />
+            
+            <!-- FRONT half of the equator (Output: Circumference) -->
+            <!-- Drawn as a thick, solid yellow line to show it is the calculated result -->
+            <!-- Drawn explicitly instead of using <use> for maximum compatibility -->
+            <path d="M 50,125 A 100,30 0 0,0 250,125" fill="none" stroke="#ffcc00" stroke-width="4" />
+
+            <!-- Dashed Diameter Line (Input: Spanning through the 3D center) -->
+            <!-- Placed over the equator so it looks like it goes inside the sphere -->
+            <line x1="50" y1="125" x2="250" y2="125" stroke="#00ffcc" stroke-width="2" stroke-dasharray="5,5" />
+            
+            <!-- Diameter Label (Inputs the Value, resting slightly above the center line) -->
+            <text id="svgDiameterText" x="150" y="115" fill="#00ffcc" font-size="16" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">Diameter</text>
+
+            <!-- Center Core Dot (Cyan to match the input line) -->
+            <circle cx="150" cy="125" r="5" fill="#00ffcc" />
+            
+            <!-- Circumference Label (Outputs the Result, wrapping around the 3D equator) -->
+            <!-- dy="5" pushes the text down slightly so it aligns perfectly with the path -->
+            <text fill="#ffcc00" font-size="20" font-weight="bold" font-family="Arial, sans-serif" dy="5">
+                <textPath id="svgCircumferenceText" href="#equatorCurve" startOffset="50%" text-anchor="middle">Circumference</textPath>
+            </text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>

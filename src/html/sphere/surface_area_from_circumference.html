@@ -1,0 +1,162 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- surface_area_from_circumference.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Sphere: Surface Area from Circumference </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateSphereSurfaceAreaFromCircumference(circumference)
+{
+    try
+    {
+        // Step 1: Find the radius from the circumference
+        let radius = parseFloat(circumference) / (2 * Math.PI);
+        
+        // Step 2: Use the radius to calculate Surface Area
+        // Surface Area = 4 * pi * r^2
+        let surfaceArea = 4 * Math.PI * (radius * radius);
+        
+        return surfaceArea.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Sphere: Surface Area from Circumference';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'CIRCUMFERENCE';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateSphereSurfaceAreaFromCircumference(inputA.value);
+        ge('result').value = result;
+        
+        // Update both SVG labels dynamically
+        if (inputA.value === '')
+        {
+            ge('svgCircumferenceText').textContent = 'Circumference';
+            ge('svgAreaText').textContent = 'Surface Area';
+        }
+        else
+        {
+            ge('svgCircumferenceText').textContent = 'C = ' + inputA.value;
+            ge('svgAreaText').textContent = 'SA = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Surface Area';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <defs>
+                <!-- 3D Radial Gradient Lighting to emphasize the Surface "Shell" -->
+                <radialGradient id="sphereLight" cx="35%" cy="35%" r="65%">
+                    <stop offset="0%" stop-color="rgba(0, 255, 255, 0.7)" />
+                    <stop offset="100%" stop-color="rgba(0, 136, 255, 0.2)" />
+                </radialGradient>
+                
+                <!-- Invisible curved path for the Surface Area (Top Edge) -->
+                <path id="surfaceCurve" d="M 50,125 A 100,100 0 0,1 250,125" fill="none" />
+                
+                <!-- Invisible curved path for the Circumference (Front Equator) -->
+                <path id="equatorCurve" d="M 50,125 A 100,30 0 0,0 250,125" fill="none" />
+            </defs>
+
+            <!-- The Sphere Base (Output: Surface Area) -->
+            <circle cx="150" cy="125" r="100" fill="url(#sphereLight)" stroke="#ffcc00" stroke-width="3" />
+            
+            <!-- BACK half of the equator (Dotted, fading behind the sphere) -->
+            <path d="M 50,125 A 100,30 0 0,1 250,125" fill="none" stroke="#00ffcc" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.4" />
+            
+            <!-- FRONT half of the equator (Input: Circumference) -->
+            <!-- Drawn as a thick dashed cyan line -->
+            <path d="M 50,125 A 100,30 0 0,0 250,125" fill="none" stroke="#00ffcc" stroke-width="3" stroke-dasharray="6,4" />
+
+            <!-- Center Core Dot -->
+            <circle cx="150" cy="125" r="4" fill="#00ffcc" />
+            
+            <!-- Circumference Label (Inputs the Value, wrapping around the 3D equator) -->
+            <text fill="#00ffcc" font-size="20" font-weight="bold" font-family="Arial, sans-serif" dy="5" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">
+                <textPath id="svgCircumferenceText" href="#equatorCurve" startOffset="50%" text-anchor="middle">Circumference</textPath>
+            </text>
+
+            <!-- Surface Area Label (Outputs the Result, curving along the top edge) -->
+            <text fill="#ffcc00" font-size="18" font-weight="bold" font-family="Arial, sans-serif" dy="-10" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">
+                <textPath id="svgAreaText" href="#surfaceCurve" startOffset="50%" text-anchor="middle">Surface Area</textPath>
+            </text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>
