@@ -1,0 +1,142 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- side_from_face_area.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Cube: Side from Face Area </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateCubeSideFromFaceArea(faceArea)
+{
+    try
+    {
+        // Side = sqrt(Face Area)
+        let fa = parseFloat(faceArea);
+        let side = Math.sqrt(fa);
+        
+        return side.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Cube: Side from Face Area';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'FACE AREA';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateCubeSideFromFaceArea(inputA.value);
+        ge('result').value = result;
+        
+        // Update both SVG labels dynamically
+        if (inputA.value === '')
+        {
+            ge('svgAreaText').textContent = 'Face Area';
+            ge('svgSideText').textContent = 'Side';
+        }
+        else
+        {
+            ge('svgAreaText').textContent = 'FA = ' + inputA.value;
+            ge('svgSideText').textContent = 'S = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Side';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    // We draw the cube manually using SVG polygons
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <!-- TOP FACE (Empty, outline only) -->
+            <polygon points="90,100 130,60 230,60 190,100" fill="none" stroke="#00ffcc" stroke-width="1.5" stroke-linejoin="round" opacity="0.4" />
+            
+            <!-- RIGHT FACE (Empty, outline only) -->
+            <polygon points="190,100 230,60 230,160 190,200" fill="none" stroke="#00ffcc" stroke-width="1.5" stroke-linejoin="round" opacity="0.4" />
+            
+            <!-- FRONT FACE (Input: Face Area) -->
+            <!-- Solid glowing cyan fill to represent the 2D surface of one side -->
+            <polygon points="90,100 190,100 190,200 90,200" fill="rgba(0, 255, 255, 0.4)" stroke="#00ffcc" stroke-width="2" stroke-linejoin="round" />
+
+            <!-- SIDE LINE (Output: The bottom-front edge) -->
+            <line x1="90" y1="200" x2="190" y2="200" stroke="#ffcc00" stroke-width="5" stroke-linecap="round" />
+            
+            <!-- FACE AREA LABEL (Inputs the Value, resting perfectly in the center of the solid cyan face) -->
+            <text id="svgAreaText" x="140" y="155" fill="#00ffcc" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Face Area</text>
+
+            <!-- SIDE LABEL (Outputs the Result, resting below the bottom yellow edge) -->
+            <text id="svgSideText" x="140" y="225" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Side</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>

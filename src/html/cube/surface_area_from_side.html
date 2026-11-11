@@ -1,0 +1,143 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- surface_area_from_side.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Cube: Surface Area from Side </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateCubeSurfaceAreaFromSide(side)
+{
+    try
+    {
+        // Surface Area = 6 * (side * side)
+        // A cube has exactly 6 identical square faces
+        let s = parseFloat(side);
+        let surfaceArea = 6 * (s * s);
+        
+        return surfaceArea.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Cube: Surface Area from Side';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'SIDE';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateCubeSurfaceAreaFromSide(inputA.value);
+        ge('result').value = result;
+        
+        // Update both SVG labels dynamically
+        if (inputA.value === '')
+        {
+            ge('svgSideText').textContent = 'Side';
+            ge('svgAreaText').textContent = 'Surface Area';
+        }
+        else
+        {
+            ge('svgSideText').textContent = 'S = ' + inputA.value;
+            ge('svgAreaText').textContent = 'SA = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Surface Area';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    // We draw the cube manually using SVG polygons
+    // All 3 visible faces are filled solidly to represent the total Surface Area shell
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <!-- TOP FACE (Output: Surface Area part 1) -->
+            <polygon points="90,100 130,60 230,60 190,100" fill="rgba(255, 204, 0, 0.9)" stroke="#ffcc00" stroke-width="2" stroke-linejoin="round" />
+            
+            <!-- RIGHT FACE (Output: Surface Area part 2) -->
+            <polygon points="190,100 230,60 230,160 190,200" fill="rgba(255, 204, 0, 0.7)" stroke="#ffcc00" stroke-width="2" stroke-linejoin="round" />
+            
+            <!-- FRONT FACE (Output: Surface Area part 3) -->
+            <polygon points="90,100 190,100 190,200 90,200" fill="rgba(255, 204, 0, 0.5)" stroke="#ffcc00" stroke-width="2" stroke-linejoin="round" />
+
+            <!-- SIDE LINE (Input: The bottom-front edge) -->
+            <line x1="90" y1="200" x2="190" y2="200" stroke="#00ffcc" stroke-width="4" stroke-dasharray="5,5" stroke-linecap="round" />
+            
+            <!-- SIDE LABEL (Inputs the Value, resting below the bottom edge) -->
+            <text id="svgSideText" x="140" y="225" fill="#00ffcc" font-size="18" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Side</text>
+
+            <!-- SURFACE AREA LABEL (Outputs the Result, resting perfectly in the center of the front face) -->
+            <text id="svgAreaText" x="140" y="155" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Surface Area</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>

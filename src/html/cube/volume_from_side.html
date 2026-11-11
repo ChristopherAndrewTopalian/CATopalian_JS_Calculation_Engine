@@ -1,0 +1,142 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- volume_from_side.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Cube: Volume from Side </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateCubeVolumeFromSide(side)
+{
+    try
+    {
+        // Volume = side * side * side (or side cubed)
+        let s = parseFloat(side);
+        let volume = s * s * s;
+        
+        // We use toFixed(3) in case they enter decimals
+        return volume.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Cube: Volume from Side';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'SIDE';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateCubeVolumeFromSide(inputA.value);
+        ge('result').value = result;
+        
+        // Update both SVG labels dynamically
+        if (inputA.value === '')
+        {
+            ge('svgSideText').textContent = 'Side';
+            ge('svgVolumeText').textContent = 'Volume';
+        }
+        else
+        {
+            ge('svgSideText').textContent = 'S = ' + inputA.value;
+            ge('svgVolumeText').textContent = 'V = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Volume';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    // We draw the cube manually using SVG polygons for the Top, Right, and Front faces
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <!-- TOP FACE (Output: Volume part 1) -->
+            <polygon points="90,100 130,60 230,60 190,100" fill="rgba(255, 255, 0, 0.4)" stroke="#ffcc00" stroke-width="1.5" stroke-linejoin="round" />
+            
+            <!-- RIGHT FACE (Output: Volume part 2) -->
+            <polygon points="190,100 230,60 230,160 190,200" fill="rgba(255, 200, 0, 0.6)" stroke="#ffcc00" stroke-width="1.5" stroke-linejoin="round" />
+            
+            <!-- FRONT FACE (Output: Volume part 3) -->
+            <polygon points="90,100 190,100 190,200 90,200" fill="rgba(255, 136, 0, 0.8)" stroke="#ffcc00" stroke-width="1.5" stroke-linejoin="round" />
+
+            <!-- SIDE LINE (Input: The bottom-front edge) -->
+            <line x1="90" y1="200" x2="190" y2="200" stroke="#00ffcc" stroke-width="4" stroke-dasharray="5,5" stroke-linecap="round" />
+            
+            <!-- SIDE LABEL (Inputs the Value, resting below the bottom edge) -->
+            <text id="svgSideText" x="140" y="225" fill="#00ffcc" font-size="18" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Side</text>
+
+            <!-- VOLUME LABEL (Outputs the Result, resting perfectly in the center of the front face) -->
+            <text id="svgVolumeText" x="140" y="155" fill="#ffcc00" font-size="22" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Volume</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>
