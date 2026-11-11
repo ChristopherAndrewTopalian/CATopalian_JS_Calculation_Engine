@@ -1,0 +1,157 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- volume_from_surface_area.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Sphere: Volume from Surface Area </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateSphereVolumeFromSurfaceArea(surfaceArea)
+{
+    try
+    {
+        // Find the radius from the Surface Area
+        let radius = Math.sqrt(parseFloat(surfaceArea) / (4 * Math.PI));
+        
+        // Use the radius to calculate Volume
+        // Volume = (4/3) * pi * r^3
+        let volume = (4/3) * Math.PI * (radius * radius * radius);
+        
+        return volume.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Sphere: Volume from Surface Area';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'SURFACE AREA';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateSphereVolumeFromSurfaceArea(inputA.value);
+        ge('result').value = result;
+        
+        // Update both SVG labels dynamically
+        if (inputA.value === '')
+        {
+            ge('svgAreaText').textContent = 'Surface Area';
+            ge('svgVolumeText').textContent = 'Volume';
+        }
+        else
+        {
+            ge('svgAreaText').textContent = 'SA = ' + inputA.value;
+            ge('svgVolumeText').textContent = 'V = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Volume';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <defs>
+                <!-- 3D Radial Gradient Lighting -->
+                <!-- Glowing yellow/orange represents the solid "filled" Volume inside -->
+                <radialGradient id="sphereLight" cx="35%" cy="35%" r="65%">
+                    <stop offset="0%" stop-color="rgba(255, 255, 0, 0.8)" />
+                    <stop offset="100%" stop-color="rgba(255, 136, 0, 0.4)" />
+                </radialGradient>
+                
+                <!-- Invisible curved path for the Surface Area (Top Edge) -->
+                <path id="surfaceCurve" d="M 50,125 A 100,100 0 0,1 250,125" fill="none" />
+            </defs>
+
+            <!-- The Sphere Base -->
+            <!-- Solid glowing fill (Volume Output) with a thick cyan stroke (Surface Area Input) -->
+            <circle cx="150" cy="125" r="100" fill="url(#sphereLight)" stroke="#00ffcc" stroke-width="4" />
+            
+            <!-- A subtle dotted equator to keep the 3D depth illusion intact -->
+            <path d="M 50,125 A 100,30 0 0,0 250,125" fill="none" stroke="#00ffcc" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.6" />
+            <path d="M 50,125 A 100,30 0 0,1 250,125" fill="none" stroke="#00ffcc" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.3" />
+
+            <!-- Center Core Dot -->
+            <circle cx="150" cy="125" r="4" fill="#00ffcc" />
+
+            <!-- Volume Label (Outputs the Result, resting directly in the center) -->
+            <!-- Adjusted y="135" to sit perfectly in the middle of the massive volume -->
+            <text id="svgVolumeText" x="150" y="135" fill="#ffcc00" font-size="22" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Volume</text>
+            
+            <!-- Surface Area Label (Inputs the Value, curving along the top edge shell) -->
+            <text fill="#00ffcc" font-size="18" font-weight="bold" font-family="Arial, sans-serif" dy="-10" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">
+                <textPath id="svgAreaText" href="#surfaceCurve" startOffset="50%" text-anchor="middle">Surface Area</textPath>
+            </text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>
