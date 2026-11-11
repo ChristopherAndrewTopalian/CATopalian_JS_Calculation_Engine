@@ -1,0 +1,156 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- diameter_from_volume.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Sphere: Diameter from Volume </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateSphereDiameterFromVolume(volume)
+{
+    try
+    {
+        // Extract the radius from the volume using the cube root
+        // r = cbrt( (V * 0.75) / pi )
+        let v = parseFloat(volume);
+        let radius = Math.cbrt((v * 0.75) / Math.PI);
+        
+        // Double the radius to get the diameter
+        let diameter = radius * 2;
+        
+        return diameter.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Sphere: Diameter from Volume';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'VOLUME';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        if(typeof inputSound === "function") inputSound();
+        
+        let result = calculateSphereDiameterFromVolume(inputA.value);
+        ge('result').value = result;
+        
+        // Update both SVG labels dynamically
+        if (inputA.value === '')
+        {
+            ge('svgVolumeText').textContent = 'Volume';
+            ge('svgDiameterText').textContent = 'Diameter';
+        }
+        else
+        {
+            ge('svgVolumeText').textContent = 'V = ' + inputA.value;
+            ge('svgDiameterText').textContent = 'D = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Diameter';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <defs>
+                <!-- 3D Radial Gradient Lighting -->
+                <!-- Cyan represents the massive 3D Volume (Input) -->
+                <radialGradient id="sphereLightCyan" cx="35%" cy="35%" r="65%">
+                    <stop offset="0%" stop-color="rgba(0, 255, 255, 0.8)" />
+                    <stop offset="100%" stop-color="rgba(0, 136, 255, 0.3)" />
+                </radialGradient>
+            </defs>
+
+            <!-- The Sphere Base (Input: Volume) -->
+            <!-- Solid cyan glowing fill for the interior volume -->
+            <circle cx="150" cy="125" r="100" fill="url(#sphereLightCyan)" stroke="#00ffcc" stroke-width="1.5" />
+            
+            <!-- A subtle dotted equator to maintain the 3D core illusion -->
+            <path d="M 50,125 A 100,30 0 0,0 250,125" fill="none" stroke="#00ffcc" stroke-width="1.5" stroke-dasharray="2,4" opacity="0.6" />
+            <path d="M 50,125 A 100,30 0 0,1 250,125" fill="none" stroke="#00ffcc" stroke-width="1.5" stroke-dasharray="2,4" opacity="0.3" />
+
+            <!-- Solid Diameter Line (Output: Piercing horizontally from edge to edge) -->
+            <!-- Thick yellow line contrasting against the cyan space -->
+            <line x1="50" y1="125" x2="250" y2="125" stroke="#ffcc00" stroke-width="5" />
+
+            <!-- Center Core Dot -->
+            <circle cx="150" cy="125" r="5" fill="#00ffcc" />
+
+            <!-- Volume Label (Inputs the Value, resting directly in the lower cyan mass) -->
+            <text id="svgVolumeText" x="150" y="165" fill="#00ffcc" font-size="22" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Volume</text>
+            
+            <!-- Diameter Label (Outputs the Result, resting slightly above the yellow line) -->
+            <text id="svgDiameterText" x="150" y="115" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Diameter</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>
