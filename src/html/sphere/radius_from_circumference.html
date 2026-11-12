@@ -24,7 +24,7 @@ function calculateSphereRadiusFromCircumference(circumference)
     try
     {
         // Radius = C / (2 * pi) 
-        // The math is exactly the same for a 3D sphere's great circle!
+        // The math is exactly the same for a 3D sphere's great circle
         let radius = parseFloat(circumference) / (2 * Math.PI);
         
         return radius.toFixed(3);
@@ -136,12 +136,13 @@ function makeInterface()
             <line x1="150" y1="125" x2="250" y2="125" stroke="#ffcc00" stroke-width="5" />
             
             <!-- Radius Label -->
-            <text id="svgRadiusText" x="200" y="115" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">Radius</text>
+            
+            <text id="svgRadiusText" x="200" y="115" fill="#ffcc00" font-size="20" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Radius</text>
             
             <!-- Circumference Label (Curved in 3D right over the equator path) -->
-            <text fill="#00ffcc" font-size="18" font-weight="bold" font-family="Arial, sans-serif" dy="5">
-                <textPath id="svgCircumferenceText" href="#equatorCurve" startOffset="50%" text-anchor="middle">Circumference</textPath>
-            </text>
+            <text fill="#00ffcc" font-size="18" font-weight="bold" font-family="Arial, sans-serif" dy="5" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">
+            <textPath id="svgCircumferenceText" href="#equatorCurve" startOffset="50%" text-anchor="middle">Circumference</textPath>
+        </text>
         </svg>
     `;
     mainWrapper.append(visualContainer);
