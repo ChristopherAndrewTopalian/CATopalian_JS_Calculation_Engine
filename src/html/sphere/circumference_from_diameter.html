@@ -134,7 +134,7 @@ function makeInterface()
             <line x1="50" y1="125" x2="250" y2="125" stroke="#00ffcc" stroke-width="2" stroke-dasharray="5,5" />
             
             <!-- Diameter Label (Inputs the Value, resting slightly above the center line) -->
-            <text id="svgDiameterText" x="150" y="115" fill="#00ffcc" font-size="16" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">Diameter</text>
+            <text id="svgDiameterText" x="150" y="115" fill="#00ffcc" font-size="16" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Diameter</text>
 
             <!-- Center Core Dot (Cyan to match the input line) -->
             <circle cx="150" cy="125" r="5" fill="#00ffcc" />
@@ -142,7 +142,7 @@ function makeInterface()
             <!-- Circumference Label (Outputs the Result, wrapping around the 3D equator) -->
             <!-- dy="5" pushes the text down slightly so it aligns perfectly with the path -->
             <text fill="#ffcc00" font-size="20" font-weight="bold" font-family="Arial, sans-serif" dy="5">
-                <textPath id="svgCircumferenceText" href="#equatorCurve" startOffset="50%" text-anchor="middle">Circumference</textPath>
+                <textPath id="svgCircumferenceText" href="#equatorCurve" startOffset="50%" text-anchor="middle" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Circumference</textPath>
             </text>
         </svg>
     `;

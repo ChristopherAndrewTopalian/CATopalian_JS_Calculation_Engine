@@ -137,12 +137,12 @@ function makeInterface()
             
             <!-- Surface Area Label (Inputs the Value, curving along the top edge) -->
             <text fill="#00ffcc" font-size="18" font-weight="bold" font-family="Arial, sans-serif" dy="-10">
-                <textPath id="svgAreaText" href="#surfaceCurve" startOffset="50%" text-anchor="middle">Surface Area</textPath>
+                <textPath id="svgAreaText" href="#surfaceCurve" startOffset="50%" text-anchor="middle" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Surface Area</textPath>
             </text>
             
             <!-- Circumference Label (Outputs the Result, wrapping around the 3D equator) -->
             <text fill="#ffcc00" font-size="20" font-weight="bold" font-family="Arial, sans-serif" dy="5">
-                <textPath id="svgCircumferenceText" href="#equatorCurve" startOffset="50%" text-anchor="middle">Circumference</textPath>
+                <textPath id="svgCircumferenceText" href="#equatorCurve" startOffset="50%" text-anchor="middle" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Circumference</textPath>
             </text>
         </svg>
     `;
