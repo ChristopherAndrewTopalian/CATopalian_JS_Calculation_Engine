@@ -1,0 +1,140 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- face_area_from_volume.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Cube: Face Area from Volume </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateCubeFaceAreaFromVolume(volume)
+{
+    try
+    {
+        // Extract 1D side (cube root of Volume)
+        // Square it to find 2D Face Area
+        // This collapses elegantly into: Volume ^ (2/3)
+        let v = parseFloat(volume);
+        let faceArea = Math.pow(v, 2/3);
+        
+        return faceArea.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Cube: Face Area from Volume';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'VOLUME';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        inputSound();
+
+        let result = calculateCubeFaceAreaFromVolume(inputA.value);
+        ge('result').value = result;
+        
+        if (inputA.value === '')
+        {
+            ge('svgVolumeText').textContent = 'Volume';
+            ge('svgFaceText').textContent = 'Face Area';
+        }
+        else
+        {
+            ge('svgVolumeText').textContent = 'V = ' + inputA.value;
+            ge('svgFaceText').textContent = 'FA = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Face Area';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <!-- TOP FACE (Input: Volume - Light Cyan Fill) -->
+            <polygon points="90,100 130,60 230,60 190,100" fill="rgba(0, 255, 255, 0.2)" stroke="#00ffcc" stroke-width="1.5" stroke-linejoin="round" />
+            
+            <!-- RIGHT FACE (Input: Volume - Light Cyan Fill) -->
+            <polygon points="190,100 230,60 230,160 190,200" fill="rgba(0, 255, 255, 0.15)" stroke="#00ffcc" stroke-width="1.5" stroke-linejoin="round" />
+            
+            <!-- FRONT FACE (Output: Face Area) -->
+            <!-- We fill it with a heavier yellow to show the extracted 2D surface, 
+                 while leaving the cyan background to represent the total 3D mass -->
+            <polygon points="90,100 190,100 190,200 90,200" fill="rgba(255, 204, 0, 0.6)" stroke="#ffcc00" stroke-width="3" stroke-linejoin="round" />
+
+            <!-- VOLUME LABEL (Inputs the Value, resting directly in the center of the 3D mass) -->
+            <text id="svgVolumeText" x="160" y="140" fill="#00ffcc" font-size="22" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Volume</text>
+
+            <!-- FACE AREA LABEL (Outputs the Result, resting clearly on the front yellow face) -->
+            <text id="svgFaceText" x="140" y="190" fill="#ffcc00" font-size="18" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Face Area</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>
