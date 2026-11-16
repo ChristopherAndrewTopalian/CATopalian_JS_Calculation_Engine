@@ -115,7 +115,9 @@ console.log("Scanning directories...");
 let menuHTML = scanDirectory(targetFolder, "");
 
 // Wrap it in a beautiful Starfleet-style Dark Theme Document
-let fullHTML = "<!DOCTYPE html>\n";
+let fullHTML = "<!-- Dedicated to God the Father -->\n";
+fullHTML += "<!-- CATopalian Starfleet Academy Index -->\n";
+fullHTML += "<!DOCTYPE html>\n";
 fullHTML += "<html lang='en'>\n";
 fullHTML += "<head>\n";
 fullHTML += "<title> Starfleet Academy Index </title>\n";
