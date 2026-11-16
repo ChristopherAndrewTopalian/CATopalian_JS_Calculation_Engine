@@ -1,0 +1,145 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- space_diagonal_from_face_area.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Cube: Space Diagonal from Face Area </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateCubeSpaceDiagonalFromFaceArea(faceArea)
+{
+    try
+    {
+        // Space Diagonal = sqrt(Face Area * 3)
+        // (This mathematically combines extracting the side length and applying the 3D Pythagorean theorem)
+        let fa = parseFloat(faceArea);
+        let spaceDiagonal = Math.sqrt(fa * 3);
+        
+        return spaceDiagonal.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Cube: Space Diagonal from Face Area';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'FACE AREA';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        inputSound();
+
+        let result = calculateCubeSpaceDiagonalFromFaceArea(inputA.value);
+        ge('result').value = result;
+        
+        if (inputA.value === '')
+        {
+            ge('svgFaceText').textContent = 'Face Area';
+            ge('svgDiagonalText').textContent = 'Space Diagonal';
+        }
+        else
+        {
+            ge('svgFaceText').textContent = 'FA = ' + inputA.value;
+            ge('svgDiagonalText').textContent = 'SD = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Space Diagonal';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <!-- TOP FACE (Empty, outline only) -->
+            <polygon points="90,100 130,60 230,60 190,100" fill="none" stroke="#00ffcc" stroke-width="1.5" stroke-linejoin="round" opacity="0.4" />
+            
+            <!-- RIGHT FACE (Empty, outline only) -->
+            <polygon points="190,100 230,60 230,160 190,200" fill="none" stroke="#00ffcc" stroke-width="1.5" stroke-linejoin="round" opacity="0.4" />
+            
+            <!-- FRONT FACE (Input: Face Area) -->
+            <!-- Drawn with a dashed cyan border over a light cyan fill to show it is the starting node -->
+            <polygon points="90,100 190,100 190,200 90,200" fill="rgba(0, 255, 255, 0.1)" stroke="#00ffcc" stroke-width="4" stroke-dasharray="8,6" stroke-linejoin="round" />
+
+            <!-- SPACE DIAGONAL (Output: Piercing the core from bottom-front-left to top-back-right) -->
+            <!-- Drawn thick and yellow to show it is the calculated result -->
+            <line x1="90" y1="200" x2="230" y2="60" stroke="#ffcc00" stroke-width="4" stroke-linecap="round" />
+            
+            <!-- CENTER CORE DOT -->
+            <circle cx="160" cy="130" r="5" fill="#ffcc00" />
+
+            <!-- FACE AREA LABEL (Inputs the Value, resting center of the dashed square) -->
+            <text id="svgFaceText" x="140" y="180" fill="#00ffcc" font-size="18" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Face Area</text>
+
+            <!-- SPACE DIAGONAL LABEL (Outputs the Result, resting near the diagonal cut) -->
+            <text id="svgDiagonalText" x="200" y="115" fill="#ffcc00" font-size="16" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Space Diagonal</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>
