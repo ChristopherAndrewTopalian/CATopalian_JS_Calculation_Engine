@@ -1,0 +1,148 @@
+<!-- Dedicated to God the Father -->
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2026 -->
+<!-- https://github.com/ChristopherTopalian -->
+<!-- https://github.com/ChristopherAndrewTopalian -->
+<!-- volume_from_space_diagonal.html -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title> Cube: Volume from Space Diagonal </title>
+
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<link rel="stylesheet" href="../../../src/css/style001.css">
+
+<script src='../../../src/js/1shortcuts/shortcuts.js'></script>
+<script src='../../../src/js/sound/sound.js'></script>
+
+<script>
+
+function calculateCubeVolumeFromSpaceDiagonal(diagonal)
+{
+    try
+    {
+        // Extract side by dividing by sqrt(3)
+        // Cube the side to find Volume
+        // This collapses to: (Diagonal / sqrt(3)) ^ 3
+        let d = parseFloat(diagonal);
+        let volume = Math.pow((d / Math.sqrt(3)), 3);
+        
+        return volume.toFixed(3);
+    }
+    catch (error)
+    {
+        console.log("Error: Could not convert input to a number.");
+        return null;
+    }
+}
+
+function makeInterface()
+{
+    let theTitle = ce('div');
+    theTitle.id = 'theTitle';
+    theTitle.textContent = 'Cube: Volume from Space Diagonal';
+    ba(theTitle);
+
+    let mainWrapper = ce('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.flexDirection = 'row';
+    mainWrapper.style.gap = '40px';
+    mainWrapper.style.alignItems = 'center';
+    ba(mainWrapper);
+
+    // ===
+    // LEFT SIDE: The Calculator
+    // ===
+    let inputContainer = ce('div');
+    inputContainer.id = 'inputContainer';
+    mainWrapper.append(inputContainer);
+
+    let input_A_Label = ce('div');
+    input_A_Label.id = 'input_A_Label';
+    input_A_Label.textContent = 'SPACE DIAGONAL';
+    inputContainer.append(input_A_Label);
+
+    let inputA = ce('input');
+    inputA.id = 'inputA';
+    inputA.type = 'number';
+    inputA.oninput = function()
+    {
+        inputSound();
+
+        let result = calculateCubeVolumeFromSpaceDiagonal(inputA.value);
+        ge('result').value = result;
+        
+        if (inputA.value === '')
+        {
+            ge('svgDiagonalText').textContent = 'Space Diagonal';
+            ge('svgVolumeText').textContent = 'Volume';
+        }
+        else
+        {
+            ge('svgDiagonalText').textContent = 'SD = ' + inputA.value;
+            ge('svgVolumeText').textContent = 'V = ' + result; 
+        }
+    };
+    inputContainer.append(inputA);
+
+    //-//
+
+    let result_label = ce('div');
+    result_label.id = 'result_label';
+    result_label.textContent = 'Volume';
+    inputContainer.append(result_label);
+
+    let result = ce('textarea');
+    result.id = 'result';
+    result.readOnly = true; 
+    inputContainer.append(result);
+
+    // ===
+    // RIGHT SIDE: The SVG Graphic
+    // ===
+    let visualContainer = ce('div');
+    visualContainer.id = 'visualContainer';
+    
+    visualContainer.innerHTML = `
+        <svg width="300" height="250" viewBox="0 0 300 250">
+            <!-- TOP FACE (Output: Volume) -->
+            <!-- Solid glowing yellow fill -->
+            <polygon points="90,100 130,60 230,60 190,100" fill="rgba(255, 204, 0, 0.4)" stroke="#ffcc00" stroke-width="1.5" stroke-linejoin="round" />
+            
+            <!-- RIGHT FACE (Output: Volume) -->
+            <!-- Solid glowing yellow fill -->
+            <polygon points="190,100 230,60 230,160 190,200" fill="rgba(255, 204, 0, 0.3)" stroke="#ffcc00" stroke-width="1.5" stroke-linejoin="round" />
+            
+            <!-- FRONT FACE (Output: Volume) -->
+            <!-- Solid glowing yellow fill -->
+            <polygon points="90,100 190,100 190,200 90,200" fill="rgba(255, 204, 0, 0.5)" stroke="#ffcc00" stroke-width="1.5" stroke-linejoin="round" />
+
+            <!-- SPACE DIAGONAL (Input: Piercing the core from bottom-front-left to top-back-right) -->
+            <!-- Drawn as a thick dashed cyan line over the yellow volume -->
+            <line x1="90" y1="200" x2="230" y2="60" stroke="#00ffcc" stroke-width="3" stroke-dasharray="5,5" stroke-linecap="round" />
+            
+            <!-- CENTER CORE DOT -->
+            <circle cx="160" cy="130" r="5" fill="#00ffcc" />
+
+            <!-- SPACE DIAGONAL LABEL (Inputs the Value, resting near the diagonal cut) -->
+            <text id="svgDiagonalText" x="200" y="115" fill="#00ffcc" font-size="16" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Space Diagonal</text>
+
+            <!-- VOLUME LABEL (Outputs the Result, resting inside the 3D mass) -->
+            <text id="svgVolumeText" x="140" y="155" fill="#ffcc00" font-size="22" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif" style="text-shadow: 1px 1px 4px black, -1px -1px 4px black;">Volume</text>
+        </svg>
+    `;
+    mainWrapper.append(visualContainer);
+}
+
+function whenLoaded()
+{
+    makeInterface();
+}
+
+</script>
+</head>
+<body onload='whenLoaded();'>
+</body>
+</html>
